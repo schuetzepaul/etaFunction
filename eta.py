@@ -18,8 +18,8 @@ parser = argparse.ArgumentParser(description="Test the effect of using the eta f
 parser.add_argument("-e", "--events", help="Number of events", type=int, default=10000)
 parser.add_argument("-n", "--noise", help="Noise in electrons", type=float, default=0)
 parser.add_argument("-t", "--threshold", help="Charge threshold", type=float, default=0)
-parser.add_argument("-s", "--noshare", type=str2bool, nargs='?', const=True, default=0, help="No charge sharing.")
-parser.add_argument("-a", "--atan", type=str2bool, nargs='?', const=False, default=0, help="Use an atan function as eta function (instead of a linear function).")
+parser.add_argument("-s", "--noshare", type=str2bool, nargs='?', const=True, default=0, help="No charge sharing")
+parser.add_argument("-a", "--atan", type=int, default=0, help="Use an atan function as eta function (instead of a linear function) and give a slope parameter")
 
 args = parser.parse_args()
 
@@ -27,7 +27,7 @@ nevents = args.events
 noise = args.noise
 threshold = args.threshold
 noShare = args.noshare
-usAtan = args.atan
+atanParameter = args.atan
 
 xmin = -55./2.
 xmax = 55./2.
@@ -37,8 +37,12 @@ def etaFunc(xin):
     if noShare:
         off = 0.5
 
-    retval = math.atan(xin/10)/math.pi + 0.5
-    retval = (xin-xmin)/(xmax-xmin)*(1.-2.*off)+off
+    if atanParameter==0: 
+        retval = (xin-xmin)/(xmax-xmin)*(1.-2.*off)+off
+    else:
+        scale = -2.*math.atan(xmin/atanParameter)/math.pi
+        retval = math.atan(xin/atanParameter)/(math.pi*scale) + 0.5
+
     return retval
     
 def centerOfGravity(y1,y2):
