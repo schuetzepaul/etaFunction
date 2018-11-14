@@ -19,6 +19,7 @@ parser.add_argument("-e", "--events", help="Number of events", type=int, default
 parser.add_argument("-n", "--noise", help="Noise in electrons", type=float, default=0)
 parser.add_argument("-t", "--threshold", help="Charge threshold", type=float, default=0)
 parser.add_argument("-s", "--noshare", type=str2bool, nargs='?', const=True, default=0, help="No charge sharing.")
+parser.add_argument("-a", "--atan", type=str2bool, nargs='?', const=False, default=0, help="Use an atan function as eta function (instead of a linear function).")
 
 args = parser.parse_args()
 
@@ -26,6 +27,7 @@ nevents = args.events
 noise = args.noise
 threshold = args.threshold
 noShare = args.noshare
+usAtan = args.atan
 
 xmin = -55./2.
 xmax = 55./2.
@@ -34,7 +36,10 @@ def etaFunc(xin):
     off = 0.
     if noShare:
         off = 0.5
-    return (xin-xmin)/(xmax-xmin)*(1.-2.*off)+off
+
+    retval = math.atan(xin/10)/math.pi + 0.5
+    retval = (xin-xmin)/(xmax-xmin)*(1.-2.*off)+off
+    return retval
     
 def centerOfGravity(y1,y2):
     return (y1*xmin+y2*xmax)/(y1+y2)
