@@ -19,7 +19,7 @@ parser.add_argument("-e", "--events", help="Number of events", type=int, default
 parser.add_argument("-n", "--noise", help="Noise in electrons", type=float, default=0)
 parser.add_argument("-t", "--threshold", help="Charge threshold", type=float, default=0)
 parser.add_argument("-s", "--noshare", type=str2bool, nargs='?', const=True, default=0, help="No charge sharing")
-parser.add_argument("-a", "--atan", type=int, default=0, help="Use an atan function as eta function (instead of a linear function) and give a slope parameter")
+parser.add_argument("-a", "--atan", type=float, default=0, help="Use an atan function as eta function (instead of a linear function) and give a slope parameter")
 
 args = parser.parse_args()
 
